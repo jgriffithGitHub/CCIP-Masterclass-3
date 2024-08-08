@@ -10,3 +10,6 @@
 [submodule "Exercise3/lib/openzeppelin-contracts"]
 	path = Exercise3/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "Exercise3/lib/chainlink-local"]
+	path = Exercise3/lib/chainlink-local
+	url = https://github.com/smartcontractkit/chainlink-local
