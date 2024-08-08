@@ -4,3 +4,6 @@
 [submodule "Exercise3/lib/chainlink-brownie-contracts"]
 	path = Exercise3/lib/chainlink-brownie-contracts
 	url = https://github.com/smartcontractkit/chainlink-brownie-contracts
+[submodule "Exercise3/lib/ccip"]
+	path = Exercise3/lib/ccip
+	url = https://github.com/smartcontractkit/ccip
