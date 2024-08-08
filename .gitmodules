@@ -7,3 +7,6 @@
 [submodule "Exercise3/lib/ccip"]
 	path = Exercise3/lib/ccip
 	url = https://github.com/smartcontractkit/ccip
+[submodule "Exercise3/lib/openzeppelin-contracts"]
+	path = Exercise3/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
