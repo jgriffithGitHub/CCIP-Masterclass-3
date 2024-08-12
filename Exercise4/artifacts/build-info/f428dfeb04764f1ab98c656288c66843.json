@@ -1,0 +1,3140 @@
+{
+	"id": "f428dfeb04764f1ab98c656288c66843",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.20",
+	"solcLongVersion": "0.8.20+commit.a1b79de6",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"Exercise4/Empty.sol": {
+				"content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\nimport {Client} from \"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol\";\r\nimport {ReentrancyGuard} from \"@openzeppelin/contracts/security/ReentrancyGuard.sol\";\r\n\r\ncontract Empty {}"
+			},
+			"@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+				"content": "// SPDX-License-Identifier: MIT\n// OpenZeppelin Contracts (last updated v4.9.0) (security/ReentrancyGuard.sol)\n\npragma solidity ^0.8.0;\n\n/**\n * @dev Contract module that helps prevent reentrant calls to a function.\n *\n * Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier\n * available, which can be applied to functions to make sure there are no nested\n * (reentrant) calls to them.\n *\n * Note that because there is a single `nonReentrant` guard, functions marked as\n * `nonReentrant` may not call one another. This can be worked around by making\n * those functions `private`, and then adding `external` `nonReentrant` entry\n * points to them.\n *\n * TIP: If you would like to learn more about reentrancy and alternative ways\n * to protect against it, check out our blog post\n * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].\n */\nabstract contract ReentrancyGuard {\n    // Booleans are more expensive than uint256 or any type that takes up a full\n    // word because each write operation emits an extra SLOAD to first read the\n    // slot's contents, replace the bits taken up by the boolean, and then write\n    // back. This is the compiler's defense against contract upgrades and\n    // pointer aliasing, and it cannot be disabled.\n\n    // The values being non-zero value makes deployment a bit more expensive,\n    // but in exchange the refund on every call to nonReentrant will be lower in\n    // amount. Since refunds are capped to a percentage of the total\n    // transaction's gas, it is best to keep them low in cases like this one, to\n    // increase the likelihood of the full refund coming into effect.\n    uint256 private constant _NOT_ENTERED = 1;\n    uint256 private constant _ENTERED = 2;\n\n    uint256 private _status;\n\n    constructor() {\n        _status = _NOT_ENTERED;\n    }\n\n    /**\n     * @dev Prevents a contract from calling itself, directly or indirectly.\n     * Calling a `nonReentrant` function from another `nonReentrant`\n     * function is not supported. It is possible to prevent this from happening\n     * by making the `nonReentrant` function external, and making it call a\n     * `private` function that does the actual work.\n     */\n    modifier nonReentrant() {\n        _nonReentrantBefore();\n        _;\n        _nonReentrantAfter();\n    }\n\n    function _nonReentrantBefore() private {\n        // On the first call to nonReentrant, _status will be _NOT_ENTERED\n        require(_status != _ENTERED, \"ReentrancyGuard: reentrant call\");\n\n        // Any calls to nonReentrant after this point will fail\n        _status = _ENTERED;\n    }\n\n    function _nonReentrantAfter() private {\n        // By storing the original value once again, a refund is triggered (see\n        // https://eips.ethereum.org/EIPS/eip-2200)\n        _status = _NOT_ENTERED;\n    }\n\n    /**\n     * @dev Returns true if the reentrancy guard is currently set to \"entered\", which indicates there is a\n     * `nonReentrant` function in the call stack.\n     */\n    function _reentrancyGuardEntered() internal view returns (bool) {\n        return _status == _ENTERED;\n    }\n}\n"
+			},
+			"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol": {
+				"content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\n// End consumer library.\nlibrary Client {\n  /// @dev RMN depends on this struct, if changing, please notify the RMN maintainers.\n  struct EVMTokenAmount {\n    address token; // token address on the local chain.\n    uint256 amount; // Amount of tokens.\n  }\n\n  struct Any2EVMMessage {\n    bytes32 messageId; // MessageId corresponding to ccipSend on source.\n    uint64 sourceChainSelector; // Source chain selector.\n    bytes sender; // abi.decode(sender) if coming from an EVM chain.\n    bytes data; // payload sent in original message.\n    EVMTokenAmount[] destTokenAmounts; // Tokens and their amounts in their destination chain representation.\n  }\n\n  // If extraArgs is empty bytes, the default is 200k gas limit.\n  struct EVM2AnyMessage {\n    bytes receiver; // abi.encode(receiver address) for dest EVM chains\n    bytes data; // Data payload\n    EVMTokenAmount[] tokenAmounts; // Token transfers\n    address feeToken; // Address of feeToken. address(0) means you will send msg.value.\n    bytes extraArgs; // Populate this with _argsToBytes(EVMExtraArgsV1)\n  }\n\n  // bytes4(keccak256(\"CCIP EVMExtraArgsV1\"));\n  bytes4 public constant EVM_EXTRA_ARGS_V1_TAG = 0x97a657c9;\n  struct EVMExtraArgsV1 {\n    uint256 gasLimit;\n  }\n\n  function _argsToBytes(EVMExtraArgsV1 memory extraArgs) internal pure returns (bytes memory bts) {\n    return abi.encodeWithSelector(EVM_EXTRA_ARGS_V1_TAG, extraArgs);\n  }\n}\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": [],
+			"evmVersion": "paris"
+		}
+	},
+	"output": {
+		"contracts": {
+			"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol": {
+				"Client": {
+					"abi": [
+						{
+							"inputs": [],
+							"name": "EVM_EXTRA_ARGS_V1_TAG",
+							"outputs": [
+								{
+									"internalType": "bytes4",
+									"name": "",
+									"type": "bytes4"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "    /* \"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol\":82:1457  library Client {... */\n  dataSize(sub_0)\n  dataOffset(sub_0)\n  0x0b\n  dup3\n  dup3\n  dup3\n  codecopy\n  dup1\n  mload\n  0x00\n  byte\n  0x73\n  eq\n  tag_1\n  jumpi\n  mstore(0x00, 0x4e487b7100000000000000000000000000000000000000000000000000000000)\n  mstore(0x04, 0x00)\n  revert(0x00, 0x24)\ntag_1:\n  mstore(0x00, address)\n  0x73\n  dup2\n  mstore8\n  dup3\n  dup2\n  return\nstop\n\nsub_0: assembly {\n        /* \"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol\":82:1457  library Client {... */\n      eq(address, deployTimeAddress())\n      mstore(0x40, 0x80)\n      jumpi(tag_1, lt(calldatasize, 0x04))\n      shr(0xe0, calldataload(0x00))\n      dup1\n      0x3ab8c0d0\n      eq\n      tag_2\n      jumpi\n    tag_1:\n      0x00\n      dup1\n      revert\n        /* \"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol\":1171:1228  bytes4 public constant EVM_EXTRA_ARGS_V1_TAG = 0x97a657c9 */\n    tag_2:\n      tag_3\n      tag_4\n      jump\t// in\n    tag_3:\n      mload(0x40)\n      tag_5\n      swap2\n      swap1\n      tag_6\n      jump\t// in\n    tag_5:\n      mload(0x40)\n      dup1\n      swap2\n      sub\n      swap1\n      return\n    tag_4:\n        /* \"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol\":1218:1228  0x97a657c9 */\n      0x97a657c9\n        /* \"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol\":1171:1228  bytes4 public constant EVM_EXTRA_ARGS_V1_TAG = 0x97a657c9 */\n      0xe0\n      shl\n      dup2\n      jump\t// out\n        /* \"#utility.yul\":7:156   */\n    tag_7:\n        /* \"#utility.yul\":43:50   */\n      0x00\n        /* \"#utility.yul\":83:149   */\n      0xffffffff00000000000000000000000000000000000000000000000000000000\n        /* \"#utility.yul\":76:81   */\n      dup3\n        /* \"#utility.yul\":72:150   */\n      and\n        /* \"#utility.yul\":61:150   */\n      swap1\n      pop\n        /* \"#utility.yul\":7:156   */\n      swap2\n      swap1\n      pop\n      jump\t// out\n        /* \"#utility.yul\":162:285   */\n    tag_8:\n        /* \"#utility.yul\":255:278   */\n      tag_12\n        /* \"#utility.yul\":272:277   */\n      dup2\n        /* \"#utility.yul\":255:278   */\n      tag_7\n      jump\t// in\n    tag_12:\n        /* \"#utility.yul\":250:253   */\n      dup3\n        /* \"#utility.yul\":243:279   */\n      mstore\n        /* \"#utility.yul\":162:285   */\n      pop\n      pop\n      jump\t// out\n        /* \"#utility.yul\":291:525   */\n    tag_6:\n        /* \"#utility.yul\":390:394   */\n      0x00\n        /* \"#utility.yul\":428:430   */\n      0x20\n        /* \"#utility.yul\":417:426   */\n      dup3\n        /* \"#utility.yul\":413:431   */\n      add\n        /* \"#utility.yul\":405:431   */\n      swap1\n      pop\n        /* \"#utility.yul\":441:518   */\n      tag_14\n        /* \"#utility.yul\":515:516   */\n      0x00\n        /* \"#utility.yul\":504:513   */\n      dup4\n        /* \"#utility.yul\":500:517   */\n      add\n        /* \"#utility.yul\":491:497   */\n      dup5\n        /* \"#utility.yul\":441:518   */\n      tag_8\n      jump\t// in\n    tag_14:\n        /* \"#utility.yul\":291:525   */\n      swap3\n      swap2\n      pop\n      pop\n      jump\t// out\n\n    auxdata: 0xa2646970667358221220db89bea0c36a6fd1d1c803c2d22581553e054b612bd9b669808e057288481a0d64736f6c63430008140033\n}\n",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "60e5610052600b82828239805160001a607314610045577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe730000000000000000000000000000000000000000301460806040526004361060335760003560e01c80633ab8c0d0146038575b600080fd5b603e6052565b604051604991906096565b60405180910390f35b6397a657c960e01b81565b60007fffffffff0000000000000000000000000000000000000000000000000000000082169050919050565b609081605d565b82525050565b600060208201905060a960008301846089565b9291505056fea2646970667358221220db89bea0c36a6fd1d1c803c2d22581553e054b612bd9b669808e057288481a0d64736f6c63430008140033",
+							"opcodes": "PUSH1 0xE5 PUSH2 0x52 PUSH1 0xB DUP3 DUP3 DUP3 CODECOPY DUP1 MLOAD PUSH1 0x0 BYTE PUSH1 0x73 EQ PUSH2 0x45 JUMPI PUSH32 0x4E487B7100000000000000000000000000000000000000000000000000000000 PUSH1 0x0 MSTORE PUSH1 0x0 PUSH1 0x4 MSTORE PUSH1 0x24 PUSH1 0x0 REVERT JUMPDEST ADDRESS PUSH1 0x0 MSTORE PUSH1 0x73 DUP2 MSTORE8 DUP3 DUP2 RETURN INVALID PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x4 CALLDATASIZE LT PUSH1 0x33 JUMPI PUSH1 0x0 CALLDATALOAD PUSH1 0xE0 SHR DUP1 PUSH4 0x3AB8C0D0 EQ PUSH1 0x38 JUMPI JUMPDEST PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH1 0x3E PUSH1 0x52 JUMP JUMPDEST PUSH1 0x40 MLOAD PUSH1 0x49 SWAP2 SWAP1 PUSH1 0x96 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH4 0x97A657C9 PUSH1 0xE0 SHL DUP2 JUMP JUMPDEST PUSH1 0x0 PUSH32 0xFFFFFFFF00000000000000000000000000000000000000000000000000000000 DUP3 AND SWAP1 POP SWAP2 SWAP1 POP JUMP JUMPDEST PUSH1 0x90 DUP2 PUSH1 0x5D JUMP JUMPDEST DUP3 MSTORE POP POP JUMP JUMPDEST PUSH1 0x0 PUSH1 0x20 DUP3 ADD SWAP1 POP PUSH1 0xA9 PUSH1 0x0 DUP4 ADD DUP5 PUSH1 0x89 JUMP JUMPDEST SWAP3 SWAP2 POP POP JUMP INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 0xDB DUP10 0xBE LOG0 0xC3 PUSH11 0x6FD1D1C803C2D22581553E SDIV 0x4B PUSH2 0x2BD9 0xB6 PUSH10 0x808E057288481A0D6473 PUSH16 0x6C634300081400330000000000000000 ",
+							"sourceMap": "82:1375:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
+						},
+						"deployedBytecode": {
+							"functionDebugData": {
+								"@EVM_EXTRA_ARGS_V1_TAG_36": {
+									"entryPoint": 82,
+									"id": 36,
+									"parameterSlots": 0,
+									"returnSlots": 0
+								},
+								"abi_encode_t_bytes4_to_t_bytes4_fromStack_library": {
+									"entryPoint": 137,
+									"id": null,
+									"parameterSlots": 2,
+									"returnSlots": 0
+								},
+								"abi_encode_tuple_t_bytes4__to_t_bytes4__fromStack_library_reversed": {
+									"entryPoint": 150,
+									"id": null,
+									"parameterSlots": 2,
+									"returnSlots": 1
+								},
+								"cleanup_t_bytes4": {
+									"entryPoint": 93,
+									"id": null,
+									"parameterSlots": 1,
+									"returnSlots": 1
+								}
+							},
+							"generatedSources": [
+								{
+									"ast": {
+										"nodeType": "YulBlock",
+										"src": "0:528:3",
+										"statements": [
+											{
+												"body": {
+													"nodeType": "YulBlock",
+													"src": "51:105:3",
+													"statements": [
+														{
+															"nodeType": "YulAssignment",
+															"src": "61:89:3",
+															"value": {
+																"arguments": [
+																	{
+																		"name": "value",
+																		"nodeType": "YulIdentifier",
+																		"src": "76:5:3"
+																	},
+																	{
+																		"kind": "number",
+																		"nodeType": "YulLiteral",
+																		"src": "83:66:3",
+																		"type": "",
+																		"value": "0xffffffff00000000000000000000000000000000000000000000000000000000"
+																	}
+																],
+																"functionName": {
+																	"name": "and",
+																	"nodeType": "YulIdentifier",
+																	"src": "72:3:3"
+																},
+																"nodeType": "YulFunctionCall",
+																"src": "72:78:3"
+															},
+															"variableNames": [
+																{
+																	"name": "cleaned",
+																	"nodeType": "YulIdentifier",
+																	"src": "61:7:3"
+																}
+															]
+														}
+													]
+												},
+												"name": "cleanup_t_bytes4",
+												"nodeType": "YulFunctionDefinition",
+												"parameters": [
+													{
+														"name": "value",
+														"nodeType": "YulTypedName",
+														"src": "33:5:3",
+														"type": ""
+													}
+												],
+												"returnVariables": [
+													{
+														"name": "cleaned",
+														"nodeType": "YulTypedName",
+														"src": "43:7:3",
+														"type": ""
+													}
+												],
+												"src": "7:149:3"
+											},
+											{
+												"body": {
+													"nodeType": "YulBlock",
+													"src": "233:52:3",
+													"statements": [
+														{
+															"expression": {
+																"arguments": [
+																	{
+																		"name": "pos",
+																		"nodeType": "YulIdentifier",
+																		"src": "250:3:3"
+																	},
+																	{
+																		"arguments": [
+																			{
+																				"name": "value",
+																				"nodeType": "YulIdentifier",
+																				"src": "272:5:3"
+																			}
+																		],
+																		"functionName": {
+																			"name": "cleanup_t_bytes4",
+																			"nodeType": "YulIdentifier",
+																			"src": "255:16:3"
+																		},
+																		"nodeType": "YulFunctionCall",
+																		"src": "255:23:3"
+																	}
+																],
+																"functionName": {
+																	"name": "mstore",
+																	"nodeType": "YulIdentifier",
+																	"src": "243:6:3"
+																},
+																"nodeType": "YulFunctionCall",
+																"src": "243:36:3"
+															},
+															"nodeType": "YulExpressionStatement",
+															"src": "243:36:3"
+														}
+													]
+												},
+												"name": "abi_encode_t_bytes4_to_t_bytes4_fromStack_library",
+												"nodeType": "YulFunctionDefinition",
+												"parameters": [
+													{
+														"name": "value",
+														"nodeType": "YulTypedName",
+														"src": "221:5:3",
+														"type": ""
+													},
+													{
+														"name": "pos",
+														"nodeType": "YulTypedName",
+														"src": "228:3:3",
+														"type": ""
+													}
+												],
+												"src": "162:123:3"
+											},
+											{
+												"body": {
+													"nodeType": "YulBlock",
+													"src": "395:130:3",
+													"statements": [
+														{
+															"nodeType": "YulAssignment",
+															"src": "405:26:3",
+															"value": {
+																"arguments": [
+																	{
+																		"name": "headStart",
+																		"nodeType": "YulIdentifier",
+																		"src": "417:9:3"
+																	},
+																	{
+																		"kind": "number",
+																		"nodeType": "YulLiteral",
+																		"src": "428:2:3",
+																		"type": "",
+																		"value": "32"
+																	}
+																],
+																"functionName": {
+																	"name": "add",
+																	"nodeType": "YulIdentifier",
+																	"src": "413:3:3"
+																},
+																"nodeType": "YulFunctionCall",
+																"src": "413:18:3"
+															},
+															"variableNames": [
+																{
+																	"name": "tail",
+																	"nodeType": "YulIdentifier",
+																	"src": "405:4:3"
+																}
+															]
+														},
+														{
+															"expression": {
+																"arguments": [
+																	{
+																		"name": "value0",
+																		"nodeType": "YulIdentifier",
+																		"src": "491:6:3"
+																	},
+																	{
+																		"arguments": [
+																			{
+																				"name": "headStart",
+																				"nodeType": "YulIdentifier",
+																				"src": "504:9:3"
+																			},
+																			{
+																				"kind": "number",
+																				"nodeType": "YulLiteral",
+																				"src": "515:1:3",
+																				"type": "",
+																				"value": "0"
+																			}
+																		],
+																		"functionName": {
+																			"name": "add",
+																			"nodeType": "YulIdentifier",
+																			"src": "500:3:3"
+																		},
+																		"nodeType": "YulFunctionCall",
+																		"src": "500:17:3"
+																	}
+																],
+																"functionName": {
+																	"name": "abi_encode_t_bytes4_to_t_bytes4_fromStack_library",
+																	"nodeType": "YulIdentifier",
+																	"src": "441:49:3"
+																},
+																"nodeType": "YulFunctionCall",
+																"src": "441:77:3"
+															},
+															"nodeType": "YulExpressionStatement",
+															"src": "441:77:3"
+														}
+													]
+												},
+												"name": "abi_encode_tuple_t_bytes4__to_t_bytes4__fromStack_library_reversed",
+												"nodeType": "YulFunctionDefinition",
+												"parameters": [
+													{
+														"name": "headStart",
+														"nodeType": "YulTypedName",
+														"src": "367:9:3",
+														"type": ""
+													},
+													{
+														"name": "value0",
+														"nodeType": "YulTypedName",
+														"src": "379:6:3",
+														"type": ""
+													}
+												],
+												"returnVariables": [
+													{
+														"name": "tail",
+														"nodeType": "YulTypedName",
+														"src": "390:4:3",
+														"type": ""
+													}
+												],
+												"src": "291:234:3"
+											}
+										]
+									},
+									"contents": "{\n\n    function cleanup_t_bytes4(value) -> cleaned {\n        cleaned := and(value, 0xffffffff00000000000000000000000000000000000000000000000000000000)\n    }\n\n    function abi_encode_t_bytes4_to_t_bytes4_fromStack_library(value, pos) {\n        mstore(pos, cleanup_t_bytes4(value))\n    }\n\n    function abi_encode_tuple_t_bytes4__to_t_bytes4__fromStack_library_reversed(headStart , value0) -> tail {\n        tail := add(headStart, 32)\n\n        abi_encode_t_bytes4_to_t_bytes4_fromStack_library(value0,  add(headStart, 0))\n\n    }\n\n}\n",
+									"id": 3,
+									"language": "Yul",
+									"name": "#utility.yul"
+								}
+							],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "730000000000000000000000000000000000000000301460806040526004361060335760003560e01c80633ab8c0d0146038575b600080fd5b603e6052565b604051604991906096565b60405180910390f35b6397a657c960e01b81565b60007fffffffff0000000000000000000000000000000000000000000000000000000082169050919050565b609081605d565b82525050565b600060208201905060a960008301846089565b9291505056fea2646970667358221220db89bea0c36a6fd1d1c803c2d22581553e054b612bd9b669808e057288481a0d64736f6c63430008140033",
+							"opcodes": "PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x4 CALLDATASIZE LT PUSH1 0x33 JUMPI PUSH1 0x0 CALLDATALOAD PUSH1 0xE0 SHR DUP1 PUSH4 0x3AB8C0D0 EQ PUSH1 0x38 JUMPI JUMPDEST PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH1 0x3E PUSH1 0x52 JUMP JUMPDEST PUSH1 0x40 MLOAD PUSH1 0x49 SWAP2 SWAP1 PUSH1 0x96 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH4 0x97A657C9 PUSH1 0xE0 SHL DUP2 JUMP JUMPDEST PUSH1 0x0 PUSH32 0xFFFFFFFF00000000000000000000000000000000000000000000000000000000 DUP3 AND SWAP1 POP SWAP2 SWAP1 POP JUMP JUMPDEST PUSH1 0x90 DUP2 PUSH1 0x5D JUMP JUMPDEST DUP3 MSTORE POP POP JUMP JUMPDEST PUSH1 0x0 PUSH1 0x20 DUP3 ADD SWAP1 POP PUSH1 0xA9 PUSH1 0x0 DUP4 ADD DUP5 PUSH1 0x89 JUMP JUMPDEST SWAP3 SWAP2 POP POP JUMP INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 0xDB DUP10 0xBE LOG0 0xC3 PUSH11 0x6FD1D1C803C2D22581553E SDIV 0x4B PUSH2 0x2BD9 0xB6 PUSH10 0x808E057288481A0D6473 PUSH16 0x6C634300081400330000000000000000 ",
+							"sourceMap": "82:1375:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;1171:57;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;;1218:10;1171:57;;;:::o;7:149:3:-;43:7;83:66;76:5;72:78;61:89;;7:149;;;:::o;162:123::-;255:23;272:5;255:23;:::i;:::-;250:3;243:36;162:123;;:::o;291:234::-;390:4;428:2;417:9;413:18;405:26;;441:77;515:1;504:9;500:17;491:6;441:77;:::i;:::-;291:234;;;;:::o"
+						},
+						"gasEstimates": {
+							"creation": {
+								"codeDepositCost": "45800",
+								"executionCost": "124",
+								"totalCost": "45924"
+							},
+							"external": {
+								"EVM_EXTRA_ARGS_V1_TAG()": "303"
+							},
+							"internal": {
+								"_argsToBytes(struct Client.EVMExtraArgsV1 memory)": "infinite"
+							}
+						},
+						"legacyAssembly": {
+							".code": [
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH #[$]",
+									"source": 0,
+									"value": "0000000000000000000000000000000000000000000000000000000000000000"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH [$]",
+									"source": 0,
+									"value": "0000000000000000000000000000000000000000000000000000000000000000"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "B"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "DUP3",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "DUP3",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "DUP3",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "CODECOPY",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "DUP1",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "MLOAD",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "0"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "BYTE",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "73"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "EQ",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH [tag]",
+									"source": 0,
+									"value": "1"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "JUMPI",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "4E487B7100000000000000000000000000000000000000000000000000000000"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "0"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "MSTORE",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "0"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "4"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "MSTORE",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "24"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "0"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "REVERT",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "tag",
+									"source": 0,
+									"value": "1"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "JUMPDEST",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "ADDRESS",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "0"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "MSTORE",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "PUSH",
+									"source": 0,
+									"value": "73"
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "DUP2",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "MSTORE8",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "DUP3",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "DUP2",
+									"source": 0
+								},
+								{
+									"begin": 82,
+									"end": 1457,
+									"name": "RETURN",
+									"source": 0
+								}
+							],
+							".data": {
+								"0": {
+									".auxdata": "a2646970667358221220db89bea0c36a6fd1d1c803c2d22581553e054b612bd9b669808e057288481a0d64736f6c63430008140033",
+									".code": [
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "PUSHDEPLOYADDRESS",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "ADDRESS",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "EQ",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "PUSH",
+											"source": 0,
+											"value": "80"
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "PUSH",
+											"source": 0,
+											"value": "40"
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "MSTORE",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "PUSH",
+											"source": 0,
+											"value": "4"
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "CALLDATASIZE",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "LT",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "PUSH [tag]",
+											"source": 0,
+											"value": "1"
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "JUMPI",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "PUSH",
+											"source": 0,
+											"value": "0"
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "CALLDATALOAD",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "PUSH",
+											"source": 0,
+											"value": "E0"
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "SHR",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "DUP1",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "PUSH",
+											"source": 0,
+											"value": "3AB8C0D0"
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "EQ",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "PUSH [tag]",
+											"source": 0,
+											"value": "2"
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "JUMPI",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "tag",
+											"source": 0,
+											"value": "1"
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "JUMPDEST",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "PUSH",
+											"source": 0,
+											"value": "0"
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "DUP1",
+											"source": 0
+										},
+										{
+											"begin": 82,
+											"end": 1457,
+											"name": "REVERT",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "tag",
+											"source": 0,
+											"value": "2"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "JUMPDEST",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "PUSH [tag]",
+											"source": 0,
+											"value": "3"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "PUSH [tag]",
+											"source": 0,
+											"value": "4"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"jumpType": "[in]",
+											"name": "JUMP",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "tag",
+											"source": 0,
+											"value": "3"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "JUMPDEST",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "PUSH",
+											"source": 0,
+											"value": "40"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "MLOAD",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "PUSH [tag]",
+											"source": 0,
+											"value": "5"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "SWAP2",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "SWAP1",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "PUSH [tag]",
+											"source": 0,
+											"value": "6"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"jumpType": "[in]",
+											"name": "JUMP",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "tag",
+											"source": 0,
+											"value": "5"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "JUMPDEST",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "PUSH",
+											"source": 0,
+											"value": "40"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "MLOAD",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "DUP1",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "SWAP2",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "SUB",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "SWAP1",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "RETURN",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "tag",
+											"source": 0,
+											"value": "4"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "JUMPDEST",
+											"source": 0
+										},
+										{
+											"begin": 1218,
+											"end": 1228,
+											"name": "PUSH",
+											"source": 0,
+											"value": "97A657C9"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "PUSH",
+											"source": 0,
+											"value": "E0"
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "SHL",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"name": "DUP2",
+											"source": 0
+										},
+										{
+											"begin": 1171,
+											"end": 1228,
+											"jumpType": "[out]",
+											"name": "JUMP",
+											"source": 0
+										},
+										{
+											"begin": 7,
+											"end": 156,
+											"name": "tag",
+											"source": 3,
+											"value": "7"
+										},
+										{
+											"begin": 7,
+											"end": 156,
+											"name": "JUMPDEST",
+											"source": 3
+										},
+										{
+											"begin": 43,
+											"end": 50,
+											"name": "PUSH",
+											"source": 3,
+											"value": "0"
+										},
+										{
+											"begin": 83,
+											"end": 149,
+											"name": "PUSH",
+											"source": 3,
+											"value": "FFFFFFFF00000000000000000000000000000000000000000000000000000000"
+										},
+										{
+											"begin": 76,
+											"end": 81,
+											"name": "DUP3",
+											"source": 3
+										},
+										{
+											"begin": 72,
+											"end": 150,
+											"name": "AND",
+											"source": 3
+										},
+										{
+											"begin": 61,
+											"end": 150,
+											"name": "SWAP1",
+											"source": 3
+										},
+										{
+											"begin": 61,
+											"end": 150,
+											"name": "POP",
+											"source": 3
+										},
+										{
+											"begin": 7,
+											"end": 156,
+											"name": "SWAP2",
+											"source": 3
+										},
+										{
+											"begin": 7,
+											"end": 156,
+											"name": "SWAP1",
+											"source": 3
+										},
+										{
+											"begin": 7,
+											"end": 156,
+											"name": "POP",
+											"source": 3
+										},
+										{
+											"begin": 7,
+											"end": 156,
+											"jumpType": "[out]",
+											"name": "JUMP",
+											"source": 3
+										},
+										{
+											"begin": 162,
+											"end": 285,
+											"name": "tag",
+											"source": 3,
+											"value": "8"
+										},
+										{
+											"begin": 162,
+											"end": 285,
+											"name": "JUMPDEST",
+											"source": 3
+										},
+										{
+											"begin": 255,
+											"end": 278,
+											"name": "PUSH [tag]",
+											"source": 3,
+											"value": "12"
+										},
+										{
+											"begin": 272,
+											"end": 277,
+											"name": "DUP2",
+											"source": 3
+										},
+										{
+											"begin": 255,
+											"end": 278,
+											"name": "PUSH [tag]",
+											"source": 3,
+											"value": "7"
+										},
+										{
+											"begin": 255,
+											"end": 278,
+											"jumpType": "[in]",
+											"name": "JUMP",
+											"source": 3
+										},
+										{
+											"begin": 255,
+											"end": 278,
+											"name": "tag",
+											"source": 3,
+											"value": "12"
+										},
+										{
+											"begin": 255,
+											"end": 278,
+											"name": "JUMPDEST",
+											"source": 3
+										},
+										{
+											"begin": 250,
+											"end": 253,
+											"name": "DUP3",
+											"source": 3
+										},
+										{
+											"begin": 243,
+											"end": 279,
+											"name": "MSTORE",
+											"source": 3
+										},
+										{
+											"begin": 162,
+											"end": 285,
+											"name": "POP",
+											"source": 3
+										},
+										{
+											"begin": 162,
+											"end": 285,
+											"name": "POP",
+											"source": 3
+										},
+										{
+											"begin": 162,
+											"end": 285,
+											"jumpType": "[out]",
+											"name": "JUMP",
+											"source": 3
+										},
+										{
+											"begin": 291,
+											"end": 525,
+											"name": "tag",
+											"source": 3,
+											"value": "6"
+										},
+										{
+											"begin": 291,
+											"end": 525,
+											"name": "JUMPDEST",
+											"source": 3
+										},
+										{
+											"begin": 390,
+											"end": 394,
+											"name": "PUSH",
+											"source": 3,
+											"value": "0"
+										},
+										{
+											"begin": 428,
+											"end": 430,
+											"name": "PUSH",
+											"source": 3,
+											"value": "20"
+										},
+										{
+											"begin": 417,
+											"end": 426,
+											"name": "DUP3",
+											"source": 3
+										},
+										{
+											"begin": 413,
+											"end": 431,
+											"name": "ADD",
+											"source": 3
+										},
+										{
+											"begin": 405,
+											"end": 431,
+											"name": "SWAP1",
+											"source": 3
+										},
+										{
+											"begin": 405,
+											"end": 431,
+											"name": "POP",
+											"source": 3
+										},
+										{
+											"begin": 441,
+											"end": 518,
+											"name": "PUSH [tag]",
+											"source": 3,
+											"value": "14"
+										},
+										{
+											"begin": 515,
+											"end": 516,
+											"name": "PUSH",
+											"source": 3,
+											"value": "0"
+										},
+										{
+											"begin": 504,
+											"end": 513,
+											"name": "DUP4",
+											"source": 3
+										},
+										{
+											"begin": 500,
+											"end": 517,
+											"name": "ADD",
+											"source": 3
+										},
+										{
+											"begin": 491,
+											"end": 497,
+											"name": "DUP5",
+											"source": 3
+										},
+										{
+											"begin": 441,
+											"end": 518,
+											"name": "PUSH [tag]",
+											"source": 3,
+											"value": "8"
+										},
+										{
+											"begin": 441,
+											"end": 518,
+											"jumpType": "[in]",
+											"name": "JUMP",
+											"source": 3
+										},
+										{
+											"begin": 441,
+											"end": 518,
+											"name": "tag",
+											"source": 3,
+											"value": "14"
+										},
+										{
+											"begin": 441,
+											"end": 518,
+											"name": "JUMPDEST",
+											"source": 3
+										},
+										{
+											"begin": 291,
+											"end": 525,
+											"name": "SWAP3",
+											"source": 3
+										},
+										{
+											"begin": 291,
+											"end": 525,
+											"name": "SWAP2",
+											"source": 3
+										},
+										{
+											"begin": 291,
+											"end": 525,
+											"name": "POP",
+											"source": 3
+										},
+										{
+											"begin": 291,
+											"end": 525,
+											"name": "POP",
+											"source": 3
+										},
+										{
+											"begin": 291,
+											"end": 525,
+											"jumpType": "[out]",
+											"name": "JUMP",
+											"source": 3
+										}
+									]
+								}
+							},
+							"sourceList": [
+								"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol",
+								"@openzeppelin/contracts/security/ReentrancyGuard.sol",
+								"Exercise4/Empty.sol",
+								"#utility.yul"
+							]
+						},
+						"methodIdentifiers": {
+							"EVM_EXTRA_ARGS_V1_TAG()": "3ab8c0d0"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"EVM_EXTRA_ARGS_V1_TAG\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol\":\"Client\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol\":{\"keccak256\":\"0x8af3ac1085c87342373772fb1a0107c7b90258e6bfed318ab2a601a14477e679\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://14395fefc8310c9a355262359c8f51036f83c004982fb600164c2a007629f81e\",\"dweb:/ipfs/QmeCLr8a5bDVyLQm8v947ULgV4CZmUeQPjVyWixzieBD5o\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {},
+						"version": 1
+					}
+				}
+			},
+			"@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+				"ReentrancyGuard": {
+					"abi": [],
+					"devdoc": {
+						"details": "Contract module that helps prevent reentrant calls to a function. Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier available, which can be applied to functions to make sure there are no nested (reentrant) calls to them. Note that because there is a single `nonReentrant` guard, functions marked as `nonReentrant` may not call one another. This can be worked around by making those functions `private`, and then adding `external` `nonReentrant` entry points to them. TIP: If you would like to learn more about reentrancy and alternative ways to protect against it, check out our blog post https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].",
+						"kind": "dev",
+						"methods": {},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"details\":\"Contract module that helps prevent reentrant calls to a function. Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier available, which can be applied to functions to make sure there are no nested (reentrant) calls to them. Note that because there is a single `nonReentrant` guard, functions marked as `nonReentrant` may not call one another. This can be worked around by making those functions `private`, and then adding `external` `nonReentrant` entry points to them. TIP: If you would like to learn more about reentrancy and alternative ways to protect against it, check out our blog post https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].\",\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"@openzeppelin/contracts/security/ReentrancyGuard.sol\":\"ReentrancyGuard\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/security/ReentrancyGuard.sol\":{\"keccak256\":\"0xa535a5df777d44e945dd24aa43a11e44b024140fc340ad0dfe42acf4002aade1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://41319e7f621f2dc3733511332c4fd032f8e32ad2aa7fd6f665c19741d9941a34\",\"dweb:/ipfs/QmcYR3bd862GD1Bc7jwrU9bGxrhUu5na1oP964bDCu2id1\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [
+							{
+								"astId": 66,
+								"contract": "@openzeppelin/contracts/security/ReentrancyGuard.sol:ReentrancyGuard",
+								"label": "_status",
+								"offset": 0,
+								"slot": "0",
+								"type": "t_uint256"
+							}
+						],
+						"types": {
+							"t_uint256": {
+								"encoding": "inplace",
+								"label": "uint256",
+								"numberOfBytes": "32"
+							}
+						}
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {},
+						"version": 1
+					}
+				}
+			},
+			"Exercise4/Empty.sol": {
+				"Empty": {
+					"abi": [],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "    /* \"Exercise4/Empty.sol\":236:253  contract Empty {} */\n  mstore(0x40, 0x80)\n  callvalue\n  dup1\n  iszero\n  tag_1\n  jumpi\n  0x00\n  dup1\n  revert\ntag_1:\n  pop\n  dataSize(sub_0)\n  dup1\n  dataOffset(sub_0)\n  0x00\n  codecopy\n  0x00\n  return\nstop\n\nsub_0: assembly {\n        /* \"Exercise4/Empty.sol\":236:253  contract Empty {} */\n      mstore(0x40, 0x80)\n      0x00\n      dup1\n      revert\n\n    auxdata: 0xa26469706673582212203be87fc9f8ef435562f555e7e063fd6336956726d82fc3fa13596c2eff87357c64736f6c63430008140033\n}\n",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea26469706673582212203be87fc9f8ef435562f555e7e063fd6336956726d82fc3fa13596c2eff87357c64736f6c63430008140033",
+							"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH1 0xF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x3F DUP1 PUSH1 0x1D PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 EXTCODESIZE 0xE8 PUSH32 0xC9F8EF435562F555E7E063FD6336956726D82FC3FA13596C2EFF87357C64736F PUSH13 0x63430008140033000000000000 ",
+							"sourceMap": "236:17:2:-:0;;;;;;;;;;;;;;;;;;;"
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "6080604052600080fdfea26469706673582212203be87fc9f8ef435562f555e7e063fd6336956726d82fc3fa13596c2eff87357c64736f6c63430008140033",
+							"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 EXTCODESIZE 0xE8 PUSH32 0xC9F8EF435562F555E7E063FD6336956726D82FC3FA13596C2EFF87357C64736F PUSH13 0x63430008140033000000000000 ",
+							"sourceMap": "236:17:2:-:0;;;;;"
+						},
+						"gasEstimates": {
+							"creation": {
+								"codeDepositCost": "12600",
+								"executionCost": "66",
+								"totalCost": "12666"
+							}
+						},
+						"legacyAssembly": {
+							".code": [
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "PUSH",
+									"source": 2,
+									"value": "80"
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "PUSH",
+									"source": 2,
+									"value": "40"
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "MSTORE",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "CALLVALUE",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "DUP1",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "ISZERO",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "PUSH [tag]",
+									"source": 2,
+									"value": "1"
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "JUMPI",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "PUSH",
+									"source": 2,
+									"value": "0"
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "DUP1",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "REVERT",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "tag",
+									"source": 2,
+									"value": "1"
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "JUMPDEST",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "POP",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "PUSH #[$]",
+									"source": 2,
+									"value": "0000000000000000000000000000000000000000000000000000000000000000"
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "DUP1",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "PUSH [$]",
+									"source": 2,
+									"value": "0000000000000000000000000000000000000000000000000000000000000000"
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "PUSH",
+									"source": 2,
+									"value": "0"
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "CODECOPY",
+									"source": 2
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "PUSH",
+									"source": 2,
+									"value": "0"
+								},
+								{
+									"begin": 236,
+									"end": 253,
+									"name": "RETURN",
+									"source": 2
+								}
+							],
+							".data": {
+								"0": {
+									".auxdata": "a26469706673582212203be87fc9f8ef435562f555e7e063fd6336956726d82fc3fa13596c2eff87357c64736f6c63430008140033",
+									".code": [
+										{
+											"begin": 236,
+											"end": 253,
+											"name": "PUSH",
+											"source": 2,
+											"value": "80"
+										},
+										{
+											"begin": 236,
+											"end": 253,
+											"name": "PUSH",
+											"source": 2,
+											"value": "40"
+										},
+										{
+											"begin": 236,
+											"end": 253,
+											"name": "MSTORE",
+											"source": 2
+										},
+										{
+											"begin": 236,
+											"end": 253,
+											"name": "PUSH",
+											"source": 2,
+											"value": "0"
+										},
+										{
+											"begin": 236,
+											"end": 253,
+											"name": "DUP1",
+											"source": 2
+										},
+										{
+											"begin": 236,
+											"end": 253,
+											"name": "REVERT",
+											"source": 2
+										}
+									]
+								}
+							},
+							"sourceList": [
+								"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol",
+								"@openzeppelin/contracts/security/ReentrancyGuard.sol",
+								"Exercise4/Empty.sol",
+								"#utility.yul"
+							]
+						},
+						"methodIdentifiers": {}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"Exercise4/Empty.sol\":\"Empty\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol\":{\"keccak256\":\"0x8af3ac1085c87342373772fb1a0107c7b90258e6bfed318ab2a601a14477e679\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://14395fefc8310c9a355262359c8f51036f83c004982fb600164c2a007629f81e\",\"dweb:/ipfs/QmeCLr8a5bDVyLQm8v947ULgV4CZmUeQPjVyWixzieBD5o\"]},\"@openzeppelin/contracts/security/ReentrancyGuard.sol\":{\"keccak256\":\"0xa535a5df777d44e945dd24aa43a11e44b024140fc340ad0dfe42acf4002aade1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://41319e7f621f2dc3733511332c4fd032f8e32ad2aa7fd6f665c19741d9941a34\",\"dweb:/ipfs/QmcYR3bd862GD1Bc7jwrU9bGxrhUu5na1oP964bDCu2id1\"]},\"Exercise4/Empty.sol\":{\"keccak256\":\"0x407261e4d539074619864a7281e6c8c52777c3fd3372f13388a1ba1dd04b053b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://416b72c0a33698c5d2e348f4cccd5662a10b64c84d66196f6064631f11b9dbdf\",\"dweb:/ipfs/QmY9Hqk4TvSadG8wnbnWp3NXFQXvkrDjh75UDFBwhe8weV\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol": {
+				"ast": {
+					"absolutePath": "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol",
+					"exportedSymbols": {
+						"Client": [
+							55
+						]
+					},
+					"id": 56,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".0"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "32:23:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "Client",
+							"contractDependencies": [],
+							"contractKind": "library",
+							"fullyImplemented": true,
+							"id": 55,
+							"linearizedBaseContracts": [
+								55
+							],
+							"name": "Client",
+							"nameLocation": "90:6:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"canonicalName": "Client.EVMTokenAmount",
+									"documentation": {
+										"id": 2,
+										"nodeType": "StructuredDocumentation",
+										"src": "101:84:0",
+										"text": "@dev RMN depends on this struct, if changing, please notify the RMN maintainers."
+									},
+									"id": 7,
+									"members": [
+										{
+											"constant": false,
+											"id": 4,
+											"mutability": "mutable",
+											"name": "token",
+											"nameLocation": "224:5:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 7,
+											"src": "216:13:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_address",
+												"typeString": "address"
+											},
+											"typeName": {
+												"id": 3,
+												"name": "address",
+												"nodeType": "ElementaryTypeName",
+												"src": "216:7:0",
+												"stateMutability": "nonpayable",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 6,
+											"mutability": "mutable",
+											"name": "amount",
+											"nameLocation": "280:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 7,
+											"src": "272:14:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 5,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "272:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "EVMTokenAmount",
+									"nameLocation": "195:14:0",
+									"nodeType": "StructDefinition",
+									"scope": 55,
+									"src": "188:124:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "Client.Any2EVMMessage",
+									"id": 20,
+									"members": [
+										{
+											"constant": false,
+											"id": 9,
+											"mutability": "mutable",
+											"name": "messageId",
+											"nameLocation": "352:9:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 20,
+											"src": "344:17:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes32",
+												"typeString": "bytes32"
+											},
+											"typeName": {
+												"id": 8,
+												"name": "bytes32",
+												"nodeType": "ElementaryTypeName",
+												"src": "344:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes32",
+													"typeString": "bytes32"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 11,
+											"mutability": "mutable",
+											"name": "sourceChainSelector",
+											"nameLocation": "424:19:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 20,
+											"src": "417:26:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint64",
+												"typeString": "uint64"
+											},
+											"typeName": {
+												"id": 10,
+												"name": "uint64",
+												"nodeType": "ElementaryTypeName",
+												"src": "417:6:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint64",
+													"typeString": "uint64"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 13,
+											"mutability": "mutable",
+											"name": "sender",
+											"nameLocation": "481:6:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 20,
+											"src": "475:12:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes_storage_ptr",
+												"typeString": "bytes"
+											},
+											"typeName": {
+												"id": 12,
+												"name": "bytes",
+												"nodeType": "ElementaryTypeName",
+												"src": "475:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_storage_ptr",
+													"typeString": "bytes"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 15,
+											"mutability": "mutable",
+											"name": "data",
+											"nameLocation": "550:4:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 20,
+											"src": "544:10:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes_storage_ptr",
+												"typeString": "bytes"
+											},
+											"typeName": {
+												"id": 14,
+												"name": "bytes",
+												"nodeType": "ElementaryTypeName",
+												"src": "544:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_storage_ptr",
+													"typeString": "bytes"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 19,
+											"mutability": "mutable",
+											"name": "destTokenAmounts",
+											"nameLocation": "614:16:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 20,
+											"src": "597:33:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_array$_t_struct$_EVMTokenAmount_$7_storage_$dyn_storage_ptr",
+												"typeString": "struct Client.EVMTokenAmount[]"
+											},
+											"typeName": {
+												"baseType": {
+													"id": 17,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 16,
+														"name": "EVMTokenAmount",
+														"nameLocations": [
+															"597:14:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 7,
+														"src": "597:14:0"
+													},
+													"referencedDeclaration": 7,
+													"src": "597:14:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_EVMTokenAmount_$7_storage_ptr",
+														"typeString": "struct Client.EVMTokenAmount"
+													}
+												},
+												"id": 18,
+												"nodeType": "ArrayTypeName",
+												"src": "597:16:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_array$_t_struct$_EVMTokenAmount_$7_storage_$dyn_storage_ptr",
+													"typeString": "struct Client.EVMTokenAmount[]"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "Any2EVMMessage",
+									"nameLocation": "323:14:0",
+									"nodeType": "StructDefinition",
+									"scope": 55,
+									"src": "316:390:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "Client.EVM2AnyMessage",
+									"id": 33,
+									"members": [
+										{
+											"constant": false,
+											"id": 22,
+											"mutability": "mutable",
+											"name": "receiver",
+											"nameLocation": "809:8:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 33,
+											"src": "803:14:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes_storage_ptr",
+												"typeString": "bytes"
+											},
+											"typeName": {
+												"id": 21,
+												"name": "bytes",
+												"nodeType": "ElementaryTypeName",
+												"src": "803:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_storage_ptr",
+													"typeString": "bytes"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 24,
+											"mutability": "mutable",
+											"name": "data",
+											"nameLocation": "881:4:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 33,
+											"src": "875:10:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes_storage_ptr",
+												"typeString": "bytes"
+											},
+											"typeName": {
+												"id": 23,
+												"name": "bytes",
+												"nodeType": "ElementaryTypeName",
+												"src": "875:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_storage_ptr",
+													"typeString": "bytes"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 28,
+											"mutability": "mutable",
+											"name": "tokenAmounts",
+											"nameLocation": "924:12:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 33,
+											"src": "907:29:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_array$_t_struct$_EVMTokenAmount_$7_storage_$dyn_storage_ptr",
+												"typeString": "struct Client.EVMTokenAmount[]"
+											},
+											"typeName": {
+												"baseType": {
+													"id": 26,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 25,
+														"name": "EVMTokenAmount",
+														"nameLocations": [
+															"907:14:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 7,
+														"src": "907:14:0"
+													},
+													"referencedDeclaration": 7,
+													"src": "907:14:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_EVMTokenAmount_$7_storage_ptr",
+														"typeString": "struct Client.EVMTokenAmount"
+													}
+												},
+												"id": 27,
+												"nodeType": "ArrayTypeName",
+												"src": "907:16:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_array$_t_struct$_EVMTokenAmount_$7_storage_$dyn_storage_ptr",
+													"typeString": "struct Client.EVMTokenAmount[]"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 30,
+											"mutability": "mutable",
+											"name": "feeToken",
+											"nameLocation": "969:8:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 33,
+											"src": "961:16:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_address",
+												"typeString": "address"
+											},
+											"typeName": {
+												"id": 29,
+												"name": "address",
+												"nodeType": "ElementaryTypeName",
+												"src": "961:7:0",
+												"stateMutability": "nonpayable",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 32,
+											"mutability": "mutable",
+											"name": "extraArgs",
+											"nameLocation": "1055:9:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 33,
+											"src": "1049:15:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_bytes_storage_ptr",
+												"typeString": "bytes"
+											},
+											"typeName": {
+												"id": 31,
+												"name": "bytes",
+												"nodeType": "ElementaryTypeName",
+												"src": "1049:5:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_storage_ptr",
+													"typeString": "bytes"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "EVM2AnyMessage",
+									"nameLocation": "782:14:0",
+									"nodeType": "StructDefinition",
+									"scope": 55,
+									"src": "775:345:0",
+									"visibility": "public"
+								},
+								{
+									"constant": true,
+									"functionSelector": "3ab8c0d0",
+									"id": 36,
+									"mutability": "constant",
+									"name": "EVM_EXTRA_ARGS_V1_TAG",
+									"nameLocation": "1194:21:0",
+									"nodeType": "VariableDeclaration",
+									"scope": 55,
+									"src": "1171:57:0",
+									"stateVariable": true,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_bytes4",
+										"typeString": "bytes4"
+									},
+									"typeName": {
+										"id": 34,
+										"name": "bytes4",
+										"nodeType": "ElementaryTypeName",
+										"src": "1171:6:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_bytes4",
+											"typeString": "bytes4"
+										}
+									},
+									"value": {
+										"hexValue": "30783937613635376339",
+										"id": 35,
+										"isConstant": false,
+										"isLValue": false,
+										"isPure": true,
+										"kind": "number",
+										"lValueRequested": false,
+										"nodeType": "Literal",
+										"src": "1218:10:0",
+										"typeDescriptions": {
+											"typeIdentifier": "t_rational_2544261065_by_1",
+											"typeString": "int_const 2544261065"
+										},
+										"value": "0x97a657c9"
+									},
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "Client.EVMExtraArgsV1",
+									"id": 39,
+									"members": [
+										{
+											"constant": false,
+											"id": 38,
+											"mutability": "mutable",
+											"name": "gasLimit",
+											"nameLocation": "1268:8:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 39,
+											"src": "1260:16:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 37,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "1260:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "EVMExtraArgsV1",
+									"nameLocation": "1239:14:0",
+									"nodeType": "StructDefinition",
+									"scope": 55,
+									"src": "1232:49:0",
+									"visibility": "public"
+								},
+								{
+									"body": {
+										"id": 53,
+										"nodeType": "Block",
+										"src": "1381:74:0",
+										"statements": [
+											{
+												"expression": {
+													"arguments": [
+														{
+															"id": 49,
+															"name": "EVM_EXTRA_ARGS_V1_TAG",
+															"nodeType": "Identifier",
+															"overloadedDeclarations": [],
+															"referencedDeclaration": 36,
+															"src": "1417:21:0",
+															"typeDescriptions": {
+																"typeIdentifier": "t_bytes4",
+																"typeString": "bytes4"
+															}
+														},
+														{
+															"id": 50,
+															"name": "extraArgs",
+															"nodeType": "Identifier",
+															"overloadedDeclarations": [],
+															"referencedDeclaration": 42,
+															"src": "1440:9:0",
+															"typeDescriptions": {
+																"typeIdentifier": "t_struct$_EVMExtraArgsV1_$39_memory_ptr",
+																"typeString": "struct Client.EVMExtraArgsV1 memory"
+															}
+														}
+													],
+													"expression": {
+														"argumentTypes": [
+															{
+																"typeIdentifier": "t_bytes4",
+																"typeString": "bytes4"
+															},
+															{
+																"typeIdentifier": "t_struct$_EVMExtraArgsV1_$39_memory_ptr",
+																"typeString": "struct Client.EVMExtraArgsV1 memory"
+															}
+														],
+														"expression": {
+															"id": 47,
+															"name": "abi",
+															"nodeType": "Identifier",
+															"overloadedDeclarations": [],
+															"referencedDeclaration": 4294967295,
+															"src": "1394:3:0",
+															"typeDescriptions": {
+																"typeIdentifier": "t_magic_abi",
+																"typeString": "abi"
+															}
+														},
+														"id": 48,
+														"isConstant": false,
+														"isLValue": false,
+														"isPure": true,
+														"lValueRequested": false,
+														"memberLocation": "1398:18:0",
+														"memberName": "encodeWithSelector",
+														"nodeType": "MemberAccess",
+														"src": "1394:22:0",
+														"typeDescriptions": {
+															"typeIdentifier": "t_function_abiencodewithselector_pure$_t_bytes4_$returns$_t_bytes_memory_ptr_$",
+															"typeString": "function (bytes4) pure returns (bytes memory)"
+														}
+													},
+													"id": 51,
+													"isConstant": false,
+													"isLValue": false,
+													"isPure": false,
+													"kind": "functionCall",
+													"lValueRequested": false,
+													"nameLocations": [],
+													"names": [],
+													"nodeType": "FunctionCall",
+													"src": "1394:56:0",
+													"tryCall": false,
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_memory_ptr",
+														"typeString": "bytes memory"
+													}
+												},
+												"functionReturnParameters": 46,
+												"id": 52,
+												"nodeType": "Return",
+												"src": "1387:63:0"
+											}
+										]
+									},
+									"id": 54,
+									"implemented": true,
+									"kind": "function",
+									"modifiers": [],
+									"name": "_argsToBytes",
+									"nameLocation": "1294:12:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 43,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 42,
+												"mutability": "mutable",
+												"name": "extraArgs",
+												"nameLocation": "1329:9:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 54,
+												"src": "1307:31:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_struct$_EVMExtraArgsV1_$39_memory_ptr",
+													"typeString": "struct Client.EVMExtraArgsV1"
+												},
+												"typeName": {
+													"id": 41,
+													"nodeType": "UserDefinedTypeName",
+													"pathNode": {
+														"id": 40,
+														"name": "EVMExtraArgsV1",
+														"nameLocations": [
+															"1307:14:0"
+														],
+														"nodeType": "IdentifierPath",
+														"referencedDeclaration": 39,
+														"src": "1307:14:0"
+													},
+													"referencedDeclaration": 39,
+													"src": "1307:14:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_struct$_EVMExtraArgsV1_$39_storage_ptr",
+														"typeString": "struct Client.EVMExtraArgsV1"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1306:33:0"
+									},
+									"returnParameters": {
+										"id": 46,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 45,
+												"mutability": "mutable",
+												"name": "bts",
+												"nameLocation": "1376:3:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 54,
+												"src": "1363:16:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bytes_memory_ptr",
+													"typeString": "bytes"
+												},
+												"typeName": {
+													"id": 44,
+													"name": "bytes",
+													"nodeType": "ElementaryTypeName",
+													"src": "1363:5:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bytes_storage_ptr",
+														"typeString": "bytes"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1362:18:0"
+									},
+									"scope": 55,
+									"src": "1285:170:0",
+									"stateMutability": "pure",
+									"virtual": false,
+									"visibility": "internal"
+								}
+							],
+							"scope": 56,
+							"src": "82:1375:0",
+							"usedErrors": [],
+							"usedEvents": []
+						}
+					],
+					"src": "32:1426:0"
+				},
+				"id": 0
+			},
+			"@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+				"ast": {
+					"absolutePath": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+					"exportedSymbols": {
+						"ReentrancyGuard": [
+							120
+						]
+					},
+					"id": 121,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 57,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".0"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "112:23:1"
+						},
+						{
+							"abstract": true,
+							"baseContracts": [],
+							"canonicalName": "ReentrancyGuard",
+							"contractDependencies": [],
+							"contractKind": "contract",
+							"documentation": {
+								"id": 58,
+								"nodeType": "StructuredDocumentation",
+								"src": "137:750:1",
+								"text": " @dev Contract module that helps prevent reentrant calls to a function.\n Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier\n available, which can be applied to functions to make sure there are no nested\n (reentrant) calls to them.\n Note that because there is a single `nonReentrant` guard, functions marked as\n `nonReentrant` may not call one another. This can be worked around by making\n those functions `private`, and then adding `external` `nonReentrant` entry\n points to them.\n TIP: If you would like to learn more about reentrancy and alternative ways\n to protect against it, check out our blog post\n https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul]."
+							},
+							"fullyImplemented": true,
+							"id": 120,
+							"linearizedBaseContracts": [
+								120
+							],
+							"name": "ReentrancyGuard",
+							"nameLocation": "906:15:1",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"constant": true,
+									"id": 61,
+									"mutability": "constant",
+									"name": "_NOT_ENTERED",
+									"nameLocation": "1701:12:1",
+									"nodeType": "VariableDeclaration",
+									"scope": 120,
+									"src": "1676:41:1",
+									"stateVariable": true,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_uint256",
+										"typeString": "uint256"
+									},
+									"typeName": {
+										"id": 59,
+										"name": "uint256",
+										"nodeType": "ElementaryTypeName",
+										"src": "1676:7:1",
+										"typeDescriptions": {
+											"typeIdentifier": "t_uint256",
+											"typeString": "uint256"
+										}
+									},
+									"value": {
+										"hexValue": "31",
+										"id": 60,
+										"isConstant": false,
+										"isLValue": false,
+										"isPure": true,
+										"kind": "number",
+										"lValueRequested": false,
+										"nodeType": "Literal",
+										"src": "1716:1:1",
+										"typeDescriptions": {
+											"typeIdentifier": "t_rational_1_by_1",
+											"typeString": "int_const 1"
+										},
+										"value": "1"
+									},
+									"visibility": "private"
+								},
+								{
+									"constant": true,
+									"id": 64,
+									"mutability": "constant",
+									"name": "_ENTERED",
+									"nameLocation": "1748:8:1",
+									"nodeType": "VariableDeclaration",
+									"scope": 120,
+									"src": "1723:37:1",
+									"stateVariable": true,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_uint256",
+										"typeString": "uint256"
+									},
+									"typeName": {
+										"id": 62,
+										"name": "uint256",
+										"nodeType": "ElementaryTypeName",
+										"src": "1723:7:1",
+										"typeDescriptions": {
+											"typeIdentifier": "t_uint256",
+											"typeString": "uint256"
+										}
+									},
+									"value": {
+										"hexValue": "32",
+										"id": 63,
+										"isConstant": false,
+										"isLValue": false,
+										"isPure": true,
+										"kind": "number",
+										"lValueRequested": false,
+										"nodeType": "Literal",
+										"src": "1759:1:1",
+										"typeDescriptions": {
+											"typeIdentifier": "t_rational_2_by_1",
+											"typeString": "int_const 2"
+										},
+										"value": "2"
+									},
+									"visibility": "private"
+								},
+								{
+									"constant": false,
+									"id": 66,
+									"mutability": "mutable",
+									"name": "_status",
+									"nameLocation": "1783:7:1",
+									"nodeType": "VariableDeclaration",
+									"scope": 120,
+									"src": "1767:23:1",
+									"stateVariable": true,
+									"storageLocation": "default",
+									"typeDescriptions": {
+										"typeIdentifier": "t_uint256",
+										"typeString": "uint256"
+									},
+									"typeName": {
+										"id": 65,
+										"name": "uint256",
+										"nodeType": "ElementaryTypeName",
+										"src": "1767:7:1",
+										"typeDescriptions": {
+											"typeIdentifier": "t_uint256",
+											"typeString": "uint256"
+										}
+									},
+									"visibility": "private"
+								},
+								{
+									"body": {
+										"id": 73,
+										"nodeType": "Block",
+										"src": "1811:39:1",
+										"statements": [
+											{
+												"expression": {
+													"id": 71,
+													"isConstant": false,
+													"isLValue": false,
+													"isPure": false,
+													"lValueRequested": false,
+													"leftHandSide": {
+														"id": 69,
+														"name": "_status",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [],
+														"referencedDeclaration": 66,
+														"src": "1821:7:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_uint256",
+															"typeString": "uint256"
+														}
+													},
+													"nodeType": "Assignment",
+													"operator": "=",
+													"rightHandSide": {
+														"id": 70,
+														"name": "_NOT_ENTERED",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [],
+														"referencedDeclaration": 61,
+														"src": "1831:12:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_uint256",
+															"typeString": "uint256"
+														}
+													},
+													"src": "1821:22:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"id": 72,
+												"nodeType": "ExpressionStatement",
+												"src": "1821:22:1"
+											}
+										]
+									},
+									"id": 74,
+									"implemented": true,
+									"kind": "constructor",
+									"modifiers": [],
+									"name": "",
+									"nameLocation": "-1:-1:-1",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 67,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1808:2:1"
+									},
+									"returnParameters": {
+										"id": 68,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "1811:0:1"
+									},
+									"scope": 120,
+									"src": "1797:53:1",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "internal"
+								},
+								{
+									"body": {
+										"id": 84,
+										"nodeType": "Block",
+										"src": "2251:79:1",
+										"statements": [
+											{
+												"expression": {
+													"arguments": [],
+													"expression": {
+														"argumentTypes": [],
+														"id": 77,
+														"name": "_nonReentrantBefore",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [],
+														"referencedDeclaration": 100,
+														"src": "2261:19:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_function_internal_nonpayable$__$returns$__$",
+															"typeString": "function ()"
+														}
+													},
+													"id": 78,
+													"isConstant": false,
+													"isLValue": false,
+													"isPure": false,
+													"kind": "functionCall",
+													"lValueRequested": false,
+													"nameLocations": [],
+													"names": [],
+													"nodeType": "FunctionCall",
+													"src": "2261:21:1",
+													"tryCall": false,
+													"typeDescriptions": {
+														"typeIdentifier": "t_tuple$__$",
+														"typeString": "tuple()"
+													}
+												},
+												"id": 79,
+												"nodeType": "ExpressionStatement",
+												"src": "2261:21:1"
+											},
+											{
+												"id": 80,
+												"nodeType": "PlaceholderStatement",
+												"src": "2292:1:1"
+											},
+											{
+												"expression": {
+													"arguments": [],
+													"expression": {
+														"argumentTypes": [],
+														"id": 81,
+														"name": "_nonReentrantAfter",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [],
+														"referencedDeclaration": 108,
+														"src": "2303:18:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_function_internal_nonpayable$__$returns$__$",
+															"typeString": "function ()"
+														}
+													},
+													"id": 82,
+													"isConstant": false,
+													"isLValue": false,
+													"isPure": false,
+													"kind": "functionCall",
+													"lValueRequested": false,
+													"nameLocations": [],
+													"names": [],
+													"nodeType": "FunctionCall",
+													"src": "2303:20:1",
+													"tryCall": false,
+													"typeDescriptions": {
+														"typeIdentifier": "t_tuple$__$",
+														"typeString": "tuple()"
+													}
+												},
+												"id": 83,
+												"nodeType": "ExpressionStatement",
+												"src": "2303:20:1"
+											}
+										]
+									},
+									"documentation": {
+										"id": 75,
+										"nodeType": "StructuredDocumentation",
+										"src": "1856:366:1",
+										"text": " @dev Prevents a contract from calling itself, directly or indirectly.\n Calling a `nonReentrant` function from another `nonReentrant`\n function is not supported. It is possible to prevent this from happening\n by making the `nonReentrant` function external, and making it call a\n `private` function that does the actual work."
+									},
+									"id": 85,
+									"name": "nonReentrant",
+									"nameLocation": "2236:12:1",
+									"nodeType": "ModifierDefinition",
+									"parameters": {
+										"id": 76,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2248:2:1"
+									},
+									"src": "2227:103:1",
+									"virtual": false,
+									"visibility": "internal"
+								},
+								{
+									"body": {
+										"id": 99,
+										"nodeType": "Block",
+										"src": "2375:248:1",
+										"statements": [
+											{
+												"expression": {
+													"arguments": [
+														{
+															"commonType": {
+																"typeIdentifier": "t_uint256",
+																"typeString": "uint256"
+															},
+															"id": 91,
+															"isConstant": false,
+															"isLValue": false,
+															"isPure": false,
+															"lValueRequested": false,
+															"leftExpression": {
+																"id": 89,
+																"name": "_status",
+																"nodeType": "Identifier",
+																"overloadedDeclarations": [],
+																"referencedDeclaration": 66,
+																"src": "2468:7:1",
+																"typeDescriptions": {
+																	"typeIdentifier": "t_uint256",
+																	"typeString": "uint256"
+																}
+															},
+															"nodeType": "BinaryOperation",
+															"operator": "!=",
+															"rightExpression": {
+																"id": 90,
+																"name": "_ENTERED",
+																"nodeType": "Identifier",
+																"overloadedDeclarations": [],
+																"referencedDeclaration": 64,
+																"src": "2479:8:1",
+																"typeDescriptions": {
+																	"typeIdentifier": "t_uint256",
+																	"typeString": "uint256"
+																}
+															},
+															"src": "2468:19:1",
+															"typeDescriptions": {
+																"typeIdentifier": "t_bool",
+																"typeString": "bool"
+															}
+														},
+														{
+															"hexValue": "5265656e7472616e637947756172643a207265656e7472616e742063616c6c",
+															"id": 92,
+															"isConstant": false,
+															"isLValue": false,
+															"isPure": true,
+															"kind": "string",
+															"lValueRequested": false,
+															"nodeType": "Literal",
+															"src": "2489:33:1",
+															"typeDescriptions": {
+																"typeIdentifier": "t_stringliteral_ebf73bba305590e4764d5cb53b69bffd6d4d092d1a67551cb346f8cfcdab8619",
+																"typeString": "literal_string \"ReentrancyGuard: reentrant call\""
+															},
+															"value": "ReentrancyGuard: reentrant call"
+														}
+													],
+													"expression": {
+														"argumentTypes": [
+															{
+																"typeIdentifier": "t_bool",
+																"typeString": "bool"
+															},
+															{
+																"typeIdentifier": "t_stringliteral_ebf73bba305590e4764d5cb53b69bffd6d4d092d1a67551cb346f8cfcdab8619",
+																"typeString": "literal_string \"ReentrancyGuard: reentrant call\""
+															}
+														],
+														"id": 88,
+														"name": "require",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [
+															4294967278,
+															4294967278
+														],
+														"referencedDeclaration": 4294967278,
+														"src": "2460:7:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+															"typeString": "function (bool,string memory) pure"
+														}
+													},
+													"id": 93,
+													"isConstant": false,
+													"isLValue": false,
+													"isPure": false,
+													"kind": "functionCall",
+													"lValueRequested": false,
+													"nameLocations": [],
+													"names": [],
+													"nodeType": "FunctionCall",
+													"src": "2460:63:1",
+													"tryCall": false,
+													"typeDescriptions": {
+														"typeIdentifier": "t_tuple$__$",
+														"typeString": "tuple()"
+													}
+												},
+												"id": 94,
+												"nodeType": "ExpressionStatement",
+												"src": "2460:63:1"
+											},
+											{
+												"expression": {
+													"id": 97,
+													"isConstant": false,
+													"isLValue": false,
+													"isPure": false,
+													"lValueRequested": false,
+													"leftHandSide": {
+														"id": 95,
+														"name": "_status",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [],
+														"referencedDeclaration": 66,
+														"src": "2598:7:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_uint256",
+															"typeString": "uint256"
+														}
+													},
+													"nodeType": "Assignment",
+													"operator": "=",
+													"rightHandSide": {
+														"id": 96,
+														"name": "_ENTERED",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [],
+														"referencedDeclaration": 64,
+														"src": "2608:8:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_uint256",
+															"typeString": "uint256"
+														}
+													},
+													"src": "2598:18:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"id": 98,
+												"nodeType": "ExpressionStatement",
+												"src": "2598:18:1"
+											}
+										]
+									},
+									"id": 100,
+									"implemented": true,
+									"kind": "function",
+									"modifiers": [],
+									"name": "_nonReentrantBefore",
+									"nameLocation": "2345:19:1",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 86,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2364:2:1"
+									},
+									"returnParameters": {
+										"id": 87,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2375:0:1"
+									},
+									"scope": 120,
+									"src": "2336:287:1",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "private"
+								},
+								{
+									"body": {
+										"id": 107,
+										"nodeType": "Block",
+										"src": "2667:171:1",
+										"statements": [
+											{
+												"expression": {
+													"id": 105,
+													"isConstant": false,
+													"isLValue": false,
+													"isPure": false,
+													"lValueRequested": false,
+													"leftHandSide": {
+														"id": 103,
+														"name": "_status",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [],
+														"referencedDeclaration": 66,
+														"src": "2809:7:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_uint256",
+															"typeString": "uint256"
+														}
+													},
+													"nodeType": "Assignment",
+													"operator": "=",
+													"rightHandSide": {
+														"id": 104,
+														"name": "_NOT_ENTERED",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [],
+														"referencedDeclaration": 61,
+														"src": "2819:12:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_uint256",
+															"typeString": "uint256"
+														}
+													},
+													"src": "2809:22:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"id": 106,
+												"nodeType": "ExpressionStatement",
+												"src": "2809:22:1"
+											}
+										]
+									},
+									"id": 108,
+									"implemented": true,
+									"kind": "function",
+									"modifiers": [],
+									"name": "_nonReentrantAfter",
+									"nameLocation": "2638:18:1",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 101,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2656:2:1"
+									},
+									"returnParameters": {
+										"id": 102,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "2667:0:1"
+									},
+									"scope": 120,
+									"src": "2629:209:1",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "private"
+								},
+								{
+									"body": {
+										"id": 118,
+										"nodeType": "Block",
+										"src": "3081:43:1",
+										"statements": [
+											{
+												"expression": {
+													"commonType": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													},
+													"id": 116,
+													"isConstant": false,
+													"isLValue": false,
+													"isPure": false,
+													"lValueRequested": false,
+													"leftExpression": {
+														"id": 114,
+														"name": "_status",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [],
+														"referencedDeclaration": 66,
+														"src": "3098:7:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_uint256",
+															"typeString": "uint256"
+														}
+													},
+													"nodeType": "BinaryOperation",
+													"operator": "==",
+													"rightExpression": {
+														"id": 115,
+														"name": "_ENTERED",
+														"nodeType": "Identifier",
+														"overloadedDeclarations": [],
+														"referencedDeclaration": 64,
+														"src": "3109:8:1",
+														"typeDescriptions": {
+															"typeIdentifier": "t_uint256",
+															"typeString": "uint256"
+														}
+													},
+													"src": "3098:19:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"functionReturnParameters": 113,
+												"id": 117,
+												"nodeType": "Return",
+												"src": "3091:26:1"
+											}
+										]
+									},
+									"documentation": {
+										"id": 109,
+										"nodeType": "StructuredDocumentation",
+										"src": "2844:168:1",
+										"text": " @dev Returns true if the reentrancy guard is currently set to \"entered\", which indicates there is a\n `nonReentrant` function in the call stack."
+									},
+									"id": 119,
+									"implemented": true,
+									"kind": "function",
+									"modifiers": [],
+									"name": "_reentrancyGuardEntered",
+									"nameLocation": "3026:23:1",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 110,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3049:2:1"
+									},
+									"returnParameters": {
+										"id": 113,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 112,
+												"mutability": "mutable",
+												"name": "",
+												"nameLocation": "-1:-1:-1",
+												"nodeType": "VariableDeclaration",
+												"scope": 119,
+												"src": "3075:4:1",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_bool",
+													"typeString": "bool"
+												},
+												"typeName": {
+													"id": 111,
+													"name": "bool",
+													"nodeType": "ElementaryTypeName",
+													"src": "3075:4:1",
+													"typeDescriptions": {
+														"typeIdentifier": "t_bool",
+														"typeString": "bool"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3074:6:1"
+									},
+									"scope": 120,
+									"src": "3017:107:1",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "internal"
+								}
+							],
+							"scope": 121,
+							"src": "888:2238:1",
+							"usedErrors": [],
+							"usedEvents": []
+						}
+					],
+					"src": "112:3015:1"
+				},
+				"id": 1
+			},
+			"Exercise4/Empty.sol": {
+				"ast": {
+					"absolutePath": "Exercise4/Empty.sol",
+					"exportedSymbols": {
+						"Client": [
+							55
+						],
+						"Empty": [
+							127
+						],
+						"ReentrancyGuard": [
+							120
+						]
+					},
+					"id": 128,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 122,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".20"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "33:24:2"
+						},
+						{
+							"absolutePath": "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol",
+							"file": "@chainlink/contracts-ccip/src/v0.8/ccip/libraries/Client.sol",
+							"id": 124,
+							"nameLocation": "-1:-1:-1",
+							"nodeType": "ImportDirective",
+							"scope": 128,
+							"sourceUnit": 56,
+							"src": "61:84:2",
+							"symbolAliases": [
+								{
+									"foreign": {
+										"id": 123,
+										"name": "Client",
+										"nodeType": "Identifier",
+										"overloadedDeclarations": [],
+										"referencedDeclaration": 55,
+										"src": "69:6:2",
+										"typeDescriptions": {}
+									},
+									"nameLocation": "-1:-1:-1"
+								}
+							],
+							"unitAlias": ""
+						},
+						{
+							"absolutePath": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+							"file": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+							"id": 126,
+							"nameLocation": "-1:-1:-1",
+							"nodeType": "ImportDirective",
+							"scope": 128,
+							"sourceUnit": 121,
+							"src": "147:85:2",
+							"symbolAliases": [
+								{
+									"foreign": {
+										"id": 125,
+										"name": "ReentrancyGuard",
+										"nodeType": "Identifier",
+										"overloadedDeclarations": [],
+										"referencedDeclaration": 120,
+										"src": "155:15:2",
+										"typeDescriptions": {}
+									},
+									"nameLocation": "-1:-1:-1"
+								}
+							],
+							"unitAlias": ""
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "Empty",
+							"contractDependencies": [],
+							"contractKind": "contract",
+							"fullyImplemented": true,
+							"id": 127,
+							"linearizedBaseContracts": [
+								127
+							],
+							"name": "Empty",
+							"nameLocation": "245:5:2",
+							"nodeType": "ContractDefinition",
+							"nodes": [],
+							"scope": 128,
+							"src": "236:17:2",
+							"usedErrors": [],
+							"usedEvents": []
+						}
+					],
+					"src": "33:220:2"
+				},
+				"id": 2
+			}
+		}
+	}
+}
