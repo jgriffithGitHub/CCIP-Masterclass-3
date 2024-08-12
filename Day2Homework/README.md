@@ -14,7 +14,7 @@ The instructions for the homework state that we are required to pass both "alice
 
 ***Error: too many arguments: passed to contract (count=2, expectedCount=1, code=UNEXPECTED_ARGUMENT, version=contracts/5.7.0)***
 
-because:
+because the declaration of the "register" function in "contracts/CrossChainNameServiceRegister.sol" is as follows:
 
 *// Assumes address(this) has sufficient native asset.*  
 *function register(string memory _name) external {*  
